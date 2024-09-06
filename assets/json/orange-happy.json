@@ -1,0 +1,15 @@
+{
+    "name": "Orange - Happy",
+    "description": "A cheerful orange with a bright smile.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/orange-happy.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Orange"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Happy"
+      }
+    ]
+  }

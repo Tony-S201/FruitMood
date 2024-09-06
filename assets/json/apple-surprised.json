@@ -1,0 +1,15 @@
+{
+    "name": "Apple - Surprised",
+    "description": "A surprised apple with wide eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/apple-surprised.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Apple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Surprised"
+      }
+    ]
+  }

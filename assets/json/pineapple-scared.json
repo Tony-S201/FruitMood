@@ -1,0 +1,15 @@
+{
+    "name": "Pineapple - Scared",
+    "description": "A scared pineapple with a worried face.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/pineapple-scared.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Pineapple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Scared"
+      }
+    ]
+  }

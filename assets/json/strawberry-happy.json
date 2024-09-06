@@ -1,0 +1,15 @@
+{
+    "name": "Strawberry - Happy",
+    "description": "A joyful strawberry with a bright smile.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/strawberry-happy.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Strawberry"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Happy"
+      }
+    ]
+  }

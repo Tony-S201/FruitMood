@@ -1,0 +1,15 @@
+{
+    "name": "Lemon - Scared",
+    "description": "A scared lemon with a worried face.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/lemon-scared.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Lemon"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Scared"
+      }
+    ]
+  }

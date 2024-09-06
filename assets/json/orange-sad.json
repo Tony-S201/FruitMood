@@ -1,0 +1,15 @@
+{
+    "name": "Orange - Sad",
+    "description": "A sad orange with droopy eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/orange-sad.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Orange"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Sad"
+      }
+    ]
+  }

@@ -1,0 +1,15 @@
+{
+    "name": "Apple - Sad",
+    "description": "A sad apple with tearful eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/apple-sad.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Apple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Sad"
+      }
+    ]
+  }

@@ -1,0 +1,15 @@
+{
+    "name": "Pineapple - Sad",
+    "description": "A sad pineapple with droopy eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/pineapple-sad.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Pineapple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Sad"
+      }
+    ]
+  }

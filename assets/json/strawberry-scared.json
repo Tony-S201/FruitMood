@@ -1,0 +1,15 @@
+{
+    "name": "Strawberry - Scared",
+    "description": "A scared strawberry with a worried face.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/strawberry-scared.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Strawberry"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Scared"
+      }
+    ]
+  }

@@ -1,0 +1,15 @@
+{
+    "name": "Lemon - Happy",
+    "description": "A joyful lemon with a bright smile.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/lemon-happy.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Lemon"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Happy"
+      }
+    ]
+  }

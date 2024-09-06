@@ -1,0 +1,15 @@
+{
+    "name": "Orange - Angry",
+    "description": "An angry orange with a fierce expression.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/orange-angry.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Orange"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Angry"
+      }
+    ]
+  }

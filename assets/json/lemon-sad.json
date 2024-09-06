@@ -1,0 +1,15 @@
+{
+    "name": "Lemon - Sad",
+    "description": "A sad lemon with tearful eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/lemon-sad.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Lemon"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Sad"
+      }
+    ]
+  }

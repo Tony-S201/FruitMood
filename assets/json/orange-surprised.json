@@ -1,0 +1,15 @@
+{
+    "name": "Orange - Surprised",
+    "description": "A surprised orange with wide eyes.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/orange-surprised.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Orange"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Surprised"
+      }
+    ]
+  }

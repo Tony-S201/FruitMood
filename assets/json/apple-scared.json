@@ -1,0 +1,15 @@
+{
+    "name": "Apple - Scared",
+    "description": "An anxious apple with a worried expression.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/apple-scared.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Apple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Scared"
+      }
+    ]
+  }

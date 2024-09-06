@@ -1,0 +1,15 @@
+{
+    "name": "Pineapple - Happy",
+    "description": "A cheerful pineapple with a big smile.",
+    "image": "ipfs://QmWEnZ1A83pmyzvbTmgLvcfBnJyjbckuQjJGSWDkmmBVzZ/pineapple-happy.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Pineapple"
+      },
+      {
+        "trait_type": "Emotion",
+        "value": "Happy"
+      }
+    ]
+  }
