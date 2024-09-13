@@ -12,11 +12,11 @@ contract FruitFableNFT is ERC1155, Ownable {
     mapping(Fruit => uint256) public ultimateTokenIds;
 
     constructor(address initialOwner) ERC1155("") Ownable(initialOwner) {
-        ultimateTokenIds[Fruit.LEMON] = 100;
-        ultimateTokenIds[Fruit.APPLE] = 200;
-        ultimateTokenIds[Fruit.STRAWBERRY] = 300;
+        ultimateTokenIds[Fruit.APPLE] = 100;
+        ultimateTokenIds[Fruit.LEMON] = 200;
+        ultimateTokenIds[Fruit.ORANGE] = 300;
         ultimateTokenIds[Fruit.PINEAPPLE] = 400;
-        ultimateTokenIds[Fruit.ORANGE] = 500;
+        ultimateTokenIds[Fruit.STRAWBERRY] = 500;
     }
 
     function setURI(string memory newuri) public onlyOwner {
