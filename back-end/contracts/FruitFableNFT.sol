@@ -33,12 +33,11 @@ contract FruitFableNFT is ERC1155, Ownable {
         totalMinted[id] += amount;
     }
 
-    function mergeFruits(Fruit fruit, Emotion[] memory emotions) public {
-        require(emotions.length == 5, "Must provide 5 different emotions");
-
+    function mergeFruits(Fruit fruit) public {
         // Check and burn the 5 tokens of fruits with different emotions
-        for (uint256 i = 0; i < emotions.length; i++) {
-            uint256 tokenId = getTokenId(fruit, emotions[i]);
+        for (uint256 i = 0; i <= 4; i++) {
+            Emotion emotion = Emotion(i); // Convert index to emotion
+            uint256 tokenId = getTokenId(fruit, emotion);
             require(balanceOf(msg.sender, tokenId) > 0, "You must own a fruit with this emotion");
             _burn(msg.sender, tokenId, 1); // Burn 1 token from the user
         }

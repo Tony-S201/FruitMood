@@ -138,6 +138,13 @@ describe("Lock", function () {
         }
       }
     });
+
+    it("Should emit an event on mint", async function () {
+      const { nftcontract, otherAccount } = await loadFixture(deployNFTFixture);
+
+      await expect(nftcontract.connect(otherAccount).mint(0, 0, 1, "0x"))
+        .to.emit(nftcontract, "TransferSingle");
+    });
     
   });
 
@@ -151,7 +158,81 @@ describe("Lock", function () {
       }
 
       // Merge fruits.
-      await nftcontract.connect(otherAccount).mergeFruits(0, )
+      await expect(nftcontract.connect(otherAccount).mergeFruits(0))
+        .to.not.be.reverted;
     });
+
+    it("Should revert if the user doesnt have the 5 emotions of the fruit", async function () {
+      const { nftcontract, otherAccount } = await loadFixture(deployNFTFixture);
+
+      // Mint only 4 emotions of 1 type of fruit.
+      for(let i = 0; i <= 3; i++) {
+        await nftcontract.connect(otherAccount).mint(0, i, 1, "0x");
+      }
+
+      // Merge fruits.
+      await expect(nftcontract.connect(otherAccount).mergeFruits(0))
+        .to.be.revertedWith("You must own a fruit with this emotion");
+    });
+
+    it("Should burn the tokens after merging", async function () {
+      const { nftcontract, otherAccount } = await loadFixture(deployNFTFixture);
+
+      // Mint 5 emotions of 1 type of fruit.
+      for(let i = 0; i <= 4; i++) {
+        await nftcontract.connect(otherAccount).mint(0, i, 1, "0x");
+      }
+
+      // Merge fruits.
+      await nftcontract.connect(otherAccount).mergeFruits(0);
+
+      // Check if fruits are burned.
+      for(let i = 0; i <= 4; i++) {
+        const itemBalance = await nftcontract.balanceOf(otherAccount.address, getTokenId(0, i));
+        expect(itemBalance).to.be.equal(0);
+      }
+    });
+
+    it("Should generate the ultimate token after merging the 5 emotions", async function () {
+      const { nftcontract, otherAccount } = await loadFixture(deployNFTFixture);
+
+      // Mint 5 emotions of 1 type of fruit.
+      for(let i = 0; i <= 4; i++) {
+        await nftcontract.connect(otherAccount).mint(0, i, 1, "0x");
+      }
+
+      // Merge fruits.
+      await nftcontract.connect(otherAccount).mergeFruits(0);
+
+      // Check if the ultimate token is correctly minted.
+      const itemBalance = await nftcontract.balanceOf(otherAccount.address, 100);
+      expect(itemBalance).to.be.equal(1);
+    });
+
+    it("Should generate the ultimate token for all type of fruits", async function () {
+      const { nftcontract, otherAccount } = await loadFixture(deployNFTFixture);
+
+      // Mint all fruits.
+      for (let fruit in Fruit) {
+        for (let emotion in Emotion) {
+          const fruitValue = Fruit[fruit];
+          const emotionValue = Emotion[emotion];
+
+          // Mint
+          await nftcontract.connect(otherAccount).mint(fruitValue, emotionValue, 1, "0x")
+        }
+      }
+
+      // Merge fruits.
+      for (let i = 0; i <= 4; i++) {
+        await nftcontract.connect(otherAccount).mergeFruits(i);
+
+        // Check ultimate tokens in user balance.
+        const currentUltimateTokenId = await nftcontract.ultimateTokenIds(i);
+        const itemBalance = await nftcontract.balanceOf(otherAccount.address, currentUltimateTokenId);
+        expect(itemBalance).to.be.equal(1);
+      }  
+    });
+
   });
 });
