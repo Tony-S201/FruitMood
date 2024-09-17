@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node.js 20.12.2
+      - name: Use Node.js 22.2.0
         uses: actions/setup-node@v1
         with:
           node-version: 22.2.0
@@ -64,5 +64,5 @@ jobs:
 
       - name: Slither Analyse
         run: |
-          slither . --filter-paths "openzeppelin"
+          slither . 
         working-directory: ./back-end
