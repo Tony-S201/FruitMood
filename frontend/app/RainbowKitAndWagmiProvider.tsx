@@ -30,7 +30,7 @@ const config = getDefaultConfig({
 
 const queryClient = new QueryClient();
 
-const RainbowKitAndWagmiProvider: React.FC<RainbowKitProviderProps> = ({children}: any):React.JSX.Element => {
+const RainbowKitAndWagmiProvider: React.FC<RainbowKitProviderProps> = ({children}) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
