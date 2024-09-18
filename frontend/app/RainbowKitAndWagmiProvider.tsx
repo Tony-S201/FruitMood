@@ -1,13 +1,17 @@
 'use client';
 
-// RainbowKit + Wagmi + React TanStack Query
+// Style
 import '@rainbow-me/rainbowkit/styles.css';
-import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
+
+// RainbowKit, Wagmi and ReactQuery
+import { darkTheme, RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
+
+// Chains from wagmi
 import {
     mainnet,
     polygon,
@@ -17,6 +21,7 @@ import {
     hardhat
   } from 'wagmi/chains';
 
+// TypeScript interface
 interface RainbowKitProviderProps {
     children: React.ReactNode;
 }
@@ -34,7 +39,10 @@ const RainbowKitAndWagmiProvider: React.FC<RainbowKitProviderProps> = ({children
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider theme={darkTheme({
+          accentColor: "#00000",
+          borderRadius: "small",
+        })}>
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>

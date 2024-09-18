@@ -1,10 +1,16 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Navigation from "./components/shared/navigation";
+import Footer from "./components/shared/footer";
 
-const Home: React.FC = (): JSX.Element => {
+const Home: React.FunctionComponent = (): JSX.Element => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <ConnectButton />
-    </main>
+    <>
+      <Navigation />
+      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <ConnectButton />
+      </main>
+      <Footer />
+    </>
   );
 }
 
