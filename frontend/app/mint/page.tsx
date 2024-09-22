@@ -70,13 +70,26 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
     setFruit(value);
   };
 
+  // Mint part
+  const { writeContract, data: hash, error, isPending } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
   const handleMintNft = () => {
-    console.log('hello')
-    const result = useWriteContract({
-      abi: contractAbi,
-      address: contractAddress,
-      functionName: 'mint'
-    })
+    try {
+      const result = writeContract({
+        abi: contractAbi,
+        address: contractAddress,
+        functionName: 'mint',
+        args: [0, 0, 1, "0x"]
+      });
+      console.log('Transaction hash:', result);
+    } catch (err) {
+      console.error('Error minting NFT:', err);
+    }
   };
 
   return (
