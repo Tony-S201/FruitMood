@@ -5,7 +5,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 // RainbowKit, Wagmi and ReactQuery
 import { darkTheme, RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
+import { http, WagmiProvider } from 'wagmi';
 import {
   QueryClientProvider,
   QueryClient,
@@ -13,11 +13,6 @@ import {
 
 // Chains from wagmi
 import {
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
     hardhat
   } from 'wagmi/chains';
 
@@ -29,7 +24,10 @@ interface RainbowKitProviderProps {
 const config = getDefaultConfig({
   appName: 'My RainbowKit App',
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID as string,
-  chains: [mainnet, polygon, optimism, arbitrum, base, hardhat],
+  chains: [hardhat],
+  transports: {
+    [hardhat.id]: http(),
+  },
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 

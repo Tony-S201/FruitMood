@@ -4,12 +4,15 @@ import { useState } from "react";
 
 import { Button } from "@mui/material";
 
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { contractAddress, contractAbi } from "../constants/fruitfablenft";
+
 const MintPage: React.FunctionComponent = (): JSX.Element => {
 
   interface Emoji {
     emoji: string,
     value: string
-  }
+  };
 
   const emotions: Emoji[] = [
     {
@@ -62,10 +65,19 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
 
   const handleSelectEmotion = (value: string): any => {
     setEmotion(value);
-  }
+  };
   const handleSelectFruit = (value: string): any => {
     setFruit(value);
-  }
+  };
+
+  const handleMintNft = () => {
+    console.log('hello')
+    const result = useWriteContract({
+      abi: contractAbi,
+      address: contractAddress,
+      functionName: 'mint'
+    })
+  };
 
   return (
     <div className="min-h-screen">
@@ -93,7 +105,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
         {(emotion !== "" && fruit !== "") ? (
           <>
             <div>Your selection: {emotion + ' ' + fruit}</div>
-            <Button variant="contained">Mint</Button>
+            <Button onClick={() => handleMintNft()} variant="contained">Mint</Button>
           </>
         ) : (<></>)}
       </div>
