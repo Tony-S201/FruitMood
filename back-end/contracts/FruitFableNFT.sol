@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract FruitFableNFT is ERC1155, Ownable {
     enum Fruit { APPLE, LEMON, ORANGE, PINEAPPLE, STRAWBERRY }
-    enum Emotion { ANGRY, HAPPY, SAD, SCARED, SURPRISED }
+    enum Emotion { ANGRY, HAPPY, SAD, SCARED, SHOKED }
 
     mapping(uint256 => uint256) public totalMinted;
     mapping(Fruit => uint256) public ultimateTokenIds;

@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 
+// UI components
 import { Button } from "@mui/material";
 
+// Wagmi
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+
+// Constants
 import { contractAddress, contractAbi } from "../constants/fruitfablenft";
+import { fruitIds, emotionIds } from "../constants/tokenIds";
 
 const MintPage: React.FunctionComponent = (): JSX.Element => {
 
@@ -60,31 +65,30 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
     }
   ]
 
-  const [emotion, setEmotion] = useState<string>("");
-  const [fruit, setFruit] = useState<string>("");
+  const [selectedEmotion, setEmotion] = useState<string>("");
+  const [selectedFruit, setFruit] = useState<string>("");
 
-  const handleSelectEmotion = (value: string): any => {
+  const handleSelectEmotion = (value: string): void => {
     setEmotion(value);
   };
-  const handleSelectFruit = (value: string): any => {
+  const handleSelectFruit = (value: string): void => {
     setFruit(value);
   };
 
   // Mint part
-  const { writeContract, data: hash, error, isPending } = useWriteContract();
+  const { writeContractAsync, data: hash, isPending } = useWriteContract();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+  const { isSuccess, isError } = useWaitForTransactionReceipt({
+    hash,
+  });
 
-  const handleMintNft = () => {
+  const handleMintNft = async() => {
     try {
-      const result = writeContract({
+      const result = await writeContractAsync({
         abi: contractAbi,
         address: contractAddress,
         functionName: 'mint',
-        args: [0, 0, 1, "0x"]
+        args: [fruitIds[selectedFruit as keyof typeof fruitIds], emotionIds[selectedEmotion as keyof typeof emotionIds], 1, "0x"]
       });
       console.log('Transaction hash:', result);
     } catch (err) {
@@ -102,7 +106,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
           </div>
         ))}
       </div>
-      {emotion !== "" ? (
+      {selectedEmotion !== "" ? (
         <>
           <h2 className="text-2xl text-center">Select a Fruit</h2>
           <div className="flex items-center justify-center gap-6 mb-6">
@@ -115,12 +119,17 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
         </>
       ) : (<></>)}
       <div className="w-full text-center">
-        {(emotion !== "" && fruit !== "") ? (
+        {(selectedEmotion !== "" && selectedFruit !== "") ? (
           <>
-            <div>Your selection: {emotion + ' ' + fruit}</div>
+            <div>Your selection: {selectedEmotion + ' ' + selectedFruit}</div>
             <Button onClick={() => handleMintNft()} variant="contained">Mint</Button>
           </>
         ) : (<></>)}
+        <div>
+          {isPending && <p>Loading...</p>}
+          {isError && <p>Error during the transaction</p>}
+          {isSuccess && <p>Success: tx confirmed</p>}
+        </div>
       </div>
     </div>
   )
