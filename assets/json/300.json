@@ -1,0 +1,15 @@
+{
+    "name": "Orange - Ultimate",
+    "description": "An ultimate orange possessing the fusion of all emotions: Happy, Sad, Angry, Surprised, and Scared.",
+    "image": "ipfs://QmStdsdgHZRtUHMwhj9TAmryCYRZKb7uiBFYDJRzxdaXpL/orange-ultimate.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Orange"
+      },
+      {
+        "trait_type": "Emotions",
+        "value": "Ultimate"
+      }
+    ]
+  }

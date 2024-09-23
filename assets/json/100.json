@@ -1,0 +1,15 @@
+{
+    "name": "Apple - Ultimate",
+    "description": "An ultimate apple possessing the fusion of all emotions: Happy, Sad, Angry, Surprised, and Scared.",
+    "image": "ipfs://QmStdsdgHZRtUHMwhj9TAmryCYRZKb7uiBFYDJRzxdaXpL/apple-ultimate.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Apple"
+      },
+      {
+        "trait_type": "Emotions",
+        "value": "Ultimate"
+      }
+    ]
+  }

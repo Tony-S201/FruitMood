@@ -1,0 +1,15 @@
+{
+    "name": "Strawberry - Ultimate",
+    "description": "An ultimate strawberry possessing the fusion of all emotions: Happy, Sad, Angry, Surprised, and Scared.",
+    "image": "ipfs://QmStdsdgHZRtUHMwhj9TAmryCYRZKb7uiBFYDJRzxdaXpL/strawberry-ultimate.png",
+    "attributes": [
+      {
+        "trait_type": "Fruit",
+        "value": "Strawberry"
+      },
+      {
+        "trait_type": "Emotions",
+        "value": "Ultimate"
+      }
+    ]
+  }
