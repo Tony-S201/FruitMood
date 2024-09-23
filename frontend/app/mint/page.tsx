@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // UI components
 import { Button } from "@mui/material";
 
 // Wagmi
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useReadContract, useAccount } from 'wagmi';
 
 // Constants
 import { contractAddress, contractAbi } from "../constants/fruitfablenft";
@@ -95,6 +95,21 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
       console.error('Error minting NFT:', err);
     }
   };
+
+  // Debug
+  const { address } = useAccount();
+
+  // Call the balanceOf function using useReadContract
+  const { data: balance, isFetched } = useReadContract({
+    abi: contractAbi,
+    address: contractAddress,
+    functionName: "balanceOf",
+    args: [address, 11], // Assuming you want to check balance for Token ID 11
+  });
+
+  useEffect(() => {
+    console.log(balance)
+  }, [balance, isFetched])
 
   return (
     <div className="min-h-screen">
