@@ -83,6 +83,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
   });
 
   const handleMintNft = async() => {
+    
     try {
       const result = await writeContractAsync({
         abi: contractAbi,
@@ -104,12 +105,12 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
     abi: contractAbi,
     address: contractAddress,
     functionName: "balanceOf",
-    args: [address, 11], // Assuming you want to check balance for Token ID 11
+    args: [address, 0]
   });
 
   useEffect(() => {
     console.log(balance)
-  }, [balance, isFetched])
+  }, [isFetched])
 
   return (
     <div className="min-h-screen">

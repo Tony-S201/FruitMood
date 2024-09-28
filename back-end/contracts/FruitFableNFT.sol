@@ -11,7 +11,12 @@ contract FruitFableNFT is ERC1155, Ownable {
     mapping(uint256 => uint256) public totalMinted;
     mapping(Fruit => uint256) public ultimateTokenIds;
 
+    string public name;
+    string public symbol;
+
     constructor(address initialOwner) ERC1155("ipfs://QmbP8C32B2mpjQFkRXmZu5J7SCacUtg13khmDBYvUQ17gJ/{id}.json") Ownable(initialOwner) {
+        name = "FruitFable Collection";
+        symbol = "FRT";
         ultimateTokenIds[Fruit.APPLE] = 100;
         ultimateTokenIds[Fruit.LEMON] = 200;
         ultimateTokenIds[Fruit.ORANGE] = 300;
