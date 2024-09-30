@@ -7,7 +7,7 @@ const Navigation: React.FunctionComponent = (): JSX.Element => {
         <ul className="flex justify-between p-4">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/mint">Mint</Link></li>
-            <li><Link href="/my-collection">My Collection</Link></li>
+            <li><Link href="/my-collection">Collection & Fusion</Link></li>
             <li><Link href="/support">FAQ & Support</Link></li>
             <ConnectButton />
         </ul>

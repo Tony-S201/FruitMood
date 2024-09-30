@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { publicClient } from "../constants/client";
+import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
 
 // UI components
@@ -14,18 +14,22 @@ import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft
 
 const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
+  interface Attribute {
+    trait_type: string;
+    value: string;
+  }
   interface nftItem {
     balance: string,
     metadata: {
       name: string,
       description: string,
       image: string,
-      attributes: Array<{ trait_type: string; value: string }>
+      attributes: Attribute[]
     },
     tokenId: number
   }
 
-  const [nftItems, setNftItems] = useState<nftItem[]|null>([]);
+  const [nftItems, setNftItems] = useState<{[key: string]: nftItem[]}>({});
   const { address: userAddress, isConnected } = useAccount();
 
   // Fetch nft metadata from contract
@@ -48,6 +52,13 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
     return null;
   };
 
+  // NFTs Fusion
+  const fusionNfts = async () => {
+    await walletClient.writeContract({
+
+    })
+  }
+
   // Get all nfts balance and infos
   useEffect(() => {
     if (userAddress && contractAddress) {
@@ -67,8 +78,19 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
             return null;
           })
         );
-        // Filter null values
-        const filteredNfts = nfts.filter(nft => nft !== null) as nftItem[];
+        // Filter null values and group by fruit trait
+        const filteredNfts = nfts.reduce((acc, nft) => {
+          if (nft) {
+            const fruitTrait = nft.metadata.attributes.find((attr: Attribute) => attr.trait_type.toLowerCase() === 'fruit');
+            const fruitType = fruitTrait ? fruitTrait.value : 'Other';
+            if (!acc[fruitType]) {
+              acc[fruitType] = [];
+            }
+            acc[fruitType].push(nft);
+          }
+          return acc;
+        }, {} as {[key: string]: nftItem[]});
+
         setNftItems(filteredNfts);
       };
       fetchNfts();
@@ -86,21 +108,28 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         <Button variant="contained">Filter</Button>
       </div>
       <div className="flex flex-wrap gap-4">
-        {nftItems && nftItems.map((nftItem, index) => (
-          <Card key={index} sx={{ maxWidth: 345 }}>
-            <CardMedia
-              sx={{ height: 275 }}
-              image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
-              title={nftItem.metadata.name}
-            />
-            <CardContent>
-                <h2 className="text-2xl">{nftItem.metadata.name}</h2>
-                <p>{nftItem.metadata.description}</p>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Transfer</Button>
-            </CardActions>
-          </Card>
+        {Object.entries(nftItems).map(([fruitType, nfts]) => (
+          <div key={fruitType} className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">{fruitType}</h2>
+            <div className="flex flex-wrap gap-4">
+              {nfts.map((nftItem, index) => (
+                <Card key={index} sx={{ maxWidth: 345 }}>
+                  <CardMedia
+                    sx={{ height: 275 }}
+                    image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
+                    title={nftItem.metadata.name}
+                  />
+                  <CardContent>
+                    <h3 className="text-xl font-semibold">{nftItem.metadata.name}</h3>
+                    <p>{nftItem.metadata.description}</p>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small">Transfer</Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
