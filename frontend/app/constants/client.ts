@@ -8,5 +8,5 @@ export const publicClient = createPublicClient({
 
 export const walletClient = createWalletClient({
     chain: hardhat,
-    transport: custom(window.ethereum)
+    transport: custom(window.ethereum!)
 });
