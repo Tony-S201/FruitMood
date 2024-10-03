@@ -7,15 +7,8 @@ import { useAccount } from "wagmi";
 import { type Hash, type TransactionReceipt, stringify } from "viem";
 
 // UI components
-import { Button, Snackbar, Alert, Grow, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from 'swiper/modules';
-
-// Swiper Styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Button, Snackbar, Alert, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery } from "@mui/material";
+import { ReactLiteCarousel } from "react-lite-carousel";
 
 // Constants
 import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft";
@@ -192,37 +185,26 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
             <h2 className="text-2xl font-bold">{fruitType}</h2>
             <Button onClick={() => fusionNfts(fruitType)} variant="contained">Fusion</Button>
           </div>
-          <Swiper
-            spaceBetween={50}
-            slidesPerView={3}
-            modules={[Navigation, Pagination]}
-            navigation
-            pagination={{ clickable: true }}
-            onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
-          >
-            {nfts.map((nftItem, index) => (
-              <SwiperSlide key={nftItem.tokenId}>
-                <Grow in={true} timeout={(index + 1) * 1000}>
-                  <Card sx={{ width: 345 }}>
-                    <CardMedia
-                      sx={{ height: 300 }}
-                      image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
-                      title={nftItem.metadata.name}
-                    />
-                    <CardContent>
-                      <h3 className="text-xl font-semibold">{nftItem.metadata.name}</h3>
-                      <p>{nftItem.metadata.description}</p>
-                      <span>Balance: {nftItem.balance}</span>
-                    </CardContent>
-                    <CardActions>
-                      <Button size="small">Transfer</Button>
-                    </CardActions>
-                  </Card>
-                </Grow>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+
+            <ReactLiteCarousel autoPlay displayButtons={nfts.length > 1} btnRounded btnBackgroundColor={'#e53935'} containerWidth={'40'}>
+              {nfts.map((nftItem, index) => (
+                <Card sx={{ width: 345 }}>
+                  <CardMedia
+                    sx={{ height: 300 }}
+                    image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
+                    title={nftItem.metadata.name}
+                  />
+                  <CardContent>
+                    <h3 className="text-xl font-semibold">{nftItem.metadata.name}</h3>
+                    <p>{nftItem.metadata.description}</p>
+                    <span>Balance: {nftItem.balance}</span>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small">Transfer</Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </ReactLiteCarousel>
         </div>
       ))}
 
