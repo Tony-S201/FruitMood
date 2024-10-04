@@ -8,7 +8,7 @@ const Navigation: React.FunctionComponent = (): JSX.Element => {
             <li><Link href="/">Home</Link></li>
             <li><Link href="/mint">Mint</Link></li>
             <li><Link href="/my-collection">Collection & Fusion</Link></li>
-            <li><Link href="/support">FAQ & Support</Link></li>
+            <li><Link href="/support">FAQ</Link></li>
             <ConnectButton />
         </ul>
     </nav>
