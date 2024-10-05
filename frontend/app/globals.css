@@ -17,13 +17,28 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: 'Quicksand', sans-serif !important;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Fredoka One', cursive !important;
+  font-weight: 600;
+}
+
+.background-home {
+  background-image: url('../public/assets/backgrounds/home-page-wave.svg');
+  background-size: cover;
+}
+
+.background-mint {
+  background-image: url('../public/assets/backgrounds/mint-page-wave.svg');
+  background-size: cover;
+}
+
+.background-collection {
+  background-image: url('../public/assets/backgrounds/collection-page-blob.svg');
+  background-size: cover;
 }
 
 @layer utilities {
@@ -31,3 +46,4 @@ body {
     text-wrap: balance;
   }
 }
+

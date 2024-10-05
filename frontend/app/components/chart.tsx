@@ -26,8 +26,8 @@ const Chart: React.FunctionComponent = (): JSX.Element => {
   const values: number[] = chartData.map(item => item.value);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="w-full max-w-2xl">
+    <div>
+      <div>
         <h2 className="text-2xl font-bold mb-4 text-center">Mint Stats</h2>
         <BarChart
           xAxis={[{ scaleType: 'band', data: labels }]}

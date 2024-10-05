@@ -113,7 +113,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
   }, [isFetched])
 
   return (
-    <div className="min-h-screen">
+    <div className="h-screen background-mint p-32">
       <h2 className="text-2xl text-center">Select An Emotion</h2>
       <div className="flex items-center justify-center gap-6 mb-6">
         {emotions.map((item, index) => (

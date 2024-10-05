@@ -171,7 +171,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   }
 
   return (
-    <div className="min-h-screen p-20">
+    <div className="h-screen background-collection p-32">
 
       {receipt ? (
         <div>{stringify(receipt, null, 2)}</div>

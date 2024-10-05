@@ -4,7 +4,6 @@ import "./globals.css";
 
 import RainbowKitAndWagmiProvider from "./RainbowKitAndWagmiProvider";
 import Navigation from "./components/shared/navigation";
-import Footer from "./components/shared/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet"></link>
+      </head>
       <body className={inter.className}>
         <RainbowKitAndWagmiProvider>
           <Navigation />
           <main>{children}</main>
-          <Footer />
         </RainbowKitAndWagmiProvider>
       </body>
     </html>
