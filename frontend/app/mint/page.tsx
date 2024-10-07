@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 // UI components
-import { Button } from "@mui/material";
+import { Button, Grow } from "@mui/material";
 
 // Wagmi
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract, useAccount } from 'wagmi';
@@ -114,35 +114,43 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
 
   return (
     <div className="h-screen background-mint p-32">
-      <h2 className="text-2xl text-center">Select An Emotion</h2>
-      <div className="flex items-center justify-center gap-6 mb-6">
-        {emotions.map((item, index) => (
-          <div onClick={() => handleSelectEmotion(item.value)} key={index} className="border-4 border-indigo-600 rounded p-8 cursor-pointer">
-            <div className="text-6xl">{item.emoji}</div>
-          </div>
-        ))}
-      </div>
-      {selectedEmotion !== "" ? (
-        <>
-          <h2 className="text-2xl text-center">Select a Fruit</h2>
+      <Grow in>
+        <div>
+          <h2 className="text-2xl text-center">Select An Emotion</h2>
           <div className="flex items-center justify-center gap-6 mb-6">
-            {fruits.map((item, index) => (
-              <div onClick={() => handleSelectFruit(item.value)} key={index} className="border-4 border-indigo-600 rounded p-8 cursor-pointer">
-                <div className="text-6xl">{item.emoji}</div>
-              </div>
-            ))}
+              {emotions.map((item, index) => (
+                <div onClick={() => handleSelectEmotion(item.value)} key={index} className="border-4 border-indigo-600 rounded p-8 cursor-pointer">
+                  <div className="text-6xl">{item.emoji}</div>
+                </div>
+              ))}
           </div>
-        </>
+        </div>
+      </Grow>
+      {selectedEmotion !== "" ? (
+        <Grow in>
+          <div>
+            <h2 className="text-2xl text-center">Select a Fruit</h2>
+            <div className="flex items-center justify-center gap-6 mb-6">
+              {fruits.map((item, index) => (
+                <div onClick={() => handleSelectFruit(item.value)} key={index} className="border-4 border-indigo-600 rounded p-8 cursor-pointer">
+                  <div className="text-6xl">{item.emoji}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Grow>
       ) : (<></>)}
       <div className="w-full text-center">
         {(selectedEmotion !== "" && selectedFruit !== "") ? (
-          <>
-            <div>Your selection: {selectedEmotion + ' ' + selectedFruit}</div>
-            <Button onClick={() => handleMintNft()} variant="contained">Mint</Button>
-          </>
+          <Grow in>
+            <div>
+              <div>Your selection: {selectedEmotion + ' ' + selectedFruit}</div>
+              <Button onClick={() => handleMintNft()} variant="contained">Mint</Button>
+            </div>
+          </Grow>
         ) : (<></>)}
         <div>
-          {isPending && <p>Loading...</p>}
+          {isPending && <Grow in><p>Loading...</p></Grow>}
           {isError && <p>Error during the transaction</p>}
           {isSuccess && <p>Success: tx confirmed</p>}
         </div>

@@ -7,7 +7,7 @@ import { useAccount } from "wagmi";
 import { type Hash, type TransactionReceipt, stringify } from "viem";
 
 // UI components
-import { Button, Snackbar, Alert, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery } from "@mui/material";
+import { Button, Snackbar, Alert, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery, Grow } from "@mui/material";
 import { ReactLiteCarousel } from "react-lite-carousel";
 
 // Constants
@@ -38,6 +38,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [receipt, setReceipt] = useState<TransactionReceipt>();
+  const [activeAnimation, setActiveAnimation] = useState<boolean>(false);
 
   /* Responsive const */
   const theme = useTheme();
@@ -152,7 +153,11 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
     };
   }, [userAddress]);
 
-  
+  useEffect(() => {
+    if (nftItems) {
+      setActiveAnimation(true);
+    }
+  }, [nftItems]);
 
   /* Render */
 
@@ -180,7 +185,8 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
       {snackAlert}
 
       {Object.entries(nftItems).map(([fruitType, nfts]) => (
-        <div key={fruitType} className="mb-8">
+        <Grow in={activeAnimation}>
+          <div key={fruitType} className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <h2 className="text-2xl font-bold">{fruitType}</h2>
             <Button onClick={() => fusionNfts(fruitType)} variant="contained">Fusion</Button>
@@ -205,7 +211,8 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
                 </Card>
               ))}
             </ReactLiteCarousel>
-        </div>
+          </div>
+        </Grow>
       ))}
 
     </div>

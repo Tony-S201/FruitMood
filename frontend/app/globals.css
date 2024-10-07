@@ -38,6 +38,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .background-collection {
   background-image: url('../public/assets/backgrounds/collection-page-blob.svg');
+  background-size: cover; 
+}
+
+.background-support {
+  background-image: url('../public/assets/backgrounds/support-page-stacked-steps.svg');
   background-size: cover;
 }
 

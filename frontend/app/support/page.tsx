@@ -1,4 +1,4 @@
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Grow } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
 const SupportPage: React.FunctionComponent = (): JSX.Element => {
@@ -48,12 +48,14 @@ const SupportPage: React.FunctionComponent = (): JSX.Element => {
   ]
 
   return (
-    <div className="min-h-screen">
-      <div>
+    <div className="h-screen background-support p-32">
+      <Grow in timeout={125}>
         <h2 className="text-2xl text-center">Frequently Asked Questions</h2>
-        <div className="w-1/2 mx-auto">
-          {questions.map((item, index) => (
-            <Accordion key={index} className="mb-3">
+      </Grow>
+      <div className="w-1/2 mx-auto">
+        {questions.map((item, index) => (
+          <Grow in timeout={125 * index + 125} key={index}>
+            <Accordion className="mb-3">
               <AccordionSummary
                 expandIcon={<ExpandMore />}
                 aria-controls={`panel-${index}-content`}
@@ -65,8 +67,8 @@ const SupportPage: React.FunctionComponent = (): JSX.Element => {
                 {item.answer}
               </AccordionDetails>
             </Accordion>
-          ))}
-        </div>
+          </Grow>
+        ))}
       </div>
     </div>
   )
