@@ -9,7 +9,7 @@ import { ReactLiteCarousel } from "react-lite-carousel";
 const Home: React.FunctionComponent = (): JSX.Element => {
   return (
     <>
-      <div className="flex h-screen p-32 background-home flex-col items-center">
+      <div className="flex h-screen p-32 flex-col items-center">
         <Grow in>
           <div>
             <ReactLiteCarousel autoPlay className="flex items-center">

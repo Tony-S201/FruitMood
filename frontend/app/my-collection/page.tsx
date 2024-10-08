@@ -176,45 +176,64 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   }
 
   return (
-    <div className="h-screen background-collection p-32">
+    <div className="min-h-screen py-20 mt-10">
+      <div className="container mx-auto px-4">
 
-      {receipt ? (
-        <div>{stringify(receipt, null, 2)}</div>
-      ): (<></>)}
-
-      {snackAlert}
-
-      {Object.entries(nftItems).map(([fruitType, nfts]) => (
-        <Grow in={activeAnimation}>
-          <div key={fruitType} className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-2xl font-bold">{fruitType}</h2>
-            <Button onClick={() => fusionNfts(fruitType)} variant="contained">Fusion</Button>
-          </div>
-
-            <ReactLiteCarousel autoPlay displayButtons={nfts.length > 1} btnRounded btnBackgroundColor={'#e53935'} containerWidth={'40'}>
-              {nfts.map((nftItem, index) => (
-                <Card sx={{ width: 345 }}>
-                  <CardMedia
-                    sx={{ height: 300 }}
-                    image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
-                    title={nftItem.metadata.name}
-                  />
-                  <CardContent>
-                    <h3 className="text-xl font-semibold">{nftItem.metadata.name}</h3>
-                    <p>{nftItem.metadata.description}</p>
-                    <span>Balance: {nftItem.balance}</span>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Transfer</Button>
-                  </CardActions>
-                </Card>
-              ))}
-            </ReactLiteCarousel>
-          </div>
+        <Grow in timeout={125}>
+          <h2 className="text-3xl font-bold text-center mb-4">My FruitFable Collection</h2>
         </Grow>
-      ))}
 
+        {receipt ? (
+          <div>{stringify(receipt, null, 2)}</div>
+        ): (<></>)}
+
+        {snackAlert}
+
+        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl">
+          {Object.entries(nftItems).map(([fruitType, nfts]) => (
+            <Grow in={activeAnimation}>
+              <div key={fruitType} className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-2xl font-bold">{fruitType}</h3>
+                  <Button 
+                    onClick={() => fusionNfts(fruitType)} 
+                    variant="contained"
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
+                  >
+                    Fusion
+                  </Button>
+                </div>
+
+                <ReactLiteCarousel autoPlay displayButtons={nfts.length > 1} btnRounded btnBackgroundColor={'#e53935'} containerWidth={'40'}>
+                  {nfts.map((nftItem, index) => (
+                    <Card key={index} className="bg-white rounded-lg shadow-lg p-4">
+                      <CardMedia
+                        className="h-64 rounded-lg"
+                        image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
+                        title={nftItem.metadata.name}
+                      />
+                      <CardContent>
+                        <h4 className="text-xl font-semibold mb-2">{nftItem.metadata.name}</h4>
+                        <p className="text-gray-600 mb-4">{nftItem.metadata.description}</p>
+                        <span className="text-lg font-bold">Balance: {nftItem.balance}</span>
+                      </CardContent>
+                      <CardActions>
+                        <Button 
+                          size="small" 
+                          variant="outlined"
+                          className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out"
+                        >
+                          Transfer
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  ))}
+                </ReactLiteCarousel>
+              </div>
+            </Grow>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

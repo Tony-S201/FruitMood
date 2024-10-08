@@ -1,16 +1,22 @@
+'use client';
 import Link from "next/link";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { usePathname } from "next/navigation";
+
+import CustomConnectButton from "../shared/CustomConnectButton";
 
 const Navigation: React.FunctionComponent = (): JSX.Element => {
+
+  const path = usePathname();
+
   return (
-    <nav>
-        <ul className="flex justify-between p-4 fixed w-full">
-            <li><Link href="/">Home</Link></li>
-            <li><Link href="/mint">Mint</Link></li>
-            <li><Link href="/my-collection">Collection & Fusion</Link></li>
-            <li><Link href="/support">FAQ</Link></li>
-            <ConnectButton />
-        </ul>
+    <nav className="navigation fixed top-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-80 backdrop-blur-md rounded-full shadow-md p-4 z-50">
+      <ul className="flex items-center justify-center space-x-8">
+          <li><Link href="/" className={path === "/" ? "active" : ""}>Home</Link></li>
+          <li><Link href="/mint" className={path === "/mint" ? "active" : ""}>Mint</Link></li>
+          <li><Link href="/my-collection" className={path === "/my-collection" ? "active" : ""}>Collection & Fusion</Link></li>
+          <li><Link href="/support" className={path === "/support" ? "active" : ""}>FAQ</Link></li>
+          <li><CustomConnectButton /></li>
+      </ul>
     </nav>
   )
 }

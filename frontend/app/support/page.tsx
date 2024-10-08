@@ -48,27 +48,32 @@ const SupportPage: React.FunctionComponent = (): JSX.Element => {
   ]
 
   return (
-    <div className="h-screen background-support p-32">
-      <Grow in timeout={125}>
-        <h2 className="text-2xl text-center">Frequently Asked Questions</h2>
-      </Grow>
-      <div className="w-1/2 mx-auto">
-        {questions.map((item, index) => (
-          <Grow in timeout={125 * index + 125} key={index}>
-            <Accordion className="mb-3">
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls={`panel-${index}-content`}
-                id={`panel-${index}-header`}
-              >
-                <span className="font-bold">{item.question}</span>
-              </AccordionSummary>
-              <AccordionDetails>
-                {item.answer}
-              </AccordionDetails>
-            </Accordion>
-          </Grow>
-        ))}
+    <div className="min-h-screen py-20 mt-10">
+      <div className="container mx-auto px-4">
+        <Grow in timeout={125}>
+          <h2 className="text-3xl font-bold text-center mb-4">
+            Frequently Asked Questions
+          </h2>
+        </Grow>
+        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl">
+          {questions.map((item, index) => (
+            <Grow in timeout={125 * index + 125} key={index}>
+              <Accordion className="mb-4" TransitionProps={{ unmountOnExit: true }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls={`panel-${index}-content`}
+                  id={`panel-${index}-header`}
+                  className="text-orange-500 hover:text-red-500"
+                >
+                  <span className="font-bold text-lg">{item.question}</span>
+                </AccordionSummary>
+                <AccordionDetails className="text-gray-700">
+                  {item.answer}
+                </AccordionDetails>
+              </Accordion>
+            </Grow>
+          ))}
+        </div>
       </div>
     </div>
   )
