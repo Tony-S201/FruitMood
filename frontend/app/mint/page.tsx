@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 // UI components
 import { Button, Grow } from "@mui/material";
@@ -67,6 +68,8 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
 
   const [selectedEmotion, setEmotion] = useState<string>("");
   const [selectedFruit, setFruit] = useState<string>("");
+
+  const { openConnectModal } = useConnectModal();
 
   const handleSelectEmotion = (value: string): void => {
     setEmotion(value);
@@ -162,7 +165,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                      isConnected ? handleMintNft() : openConnectModal()
+                      isConnected ? handleMintNft() : openConnectModal?.()
                     }}
                     className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
                   >

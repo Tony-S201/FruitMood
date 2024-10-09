@@ -4,11 +4,11 @@
 import React, { useState, useEffect } from "react";
 import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { type Hash, type TransactionReceipt, stringify } from "viem";
 
 // UI components
 import { Button, Snackbar, Alert, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery, Grow } from "@mui/material";
-import { ReactLiteCarousel } from "react-lite-carousel";
 
 // Constants
 import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft";
@@ -47,6 +47,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
   /* Another const */
   const { address: userAddress, isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   const getSlidesPerView = () => {
     if (isMobile) return 1;
@@ -171,13 +172,41 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
     </React.Fragment>
   );
 
+  const customAlert: JSX.Element = (
+    <div className={`fixed top-0 left-0 right-0 z-50 ${showError ? 'block' : 'hidden'}`}>
+      <div className={`bg-${errorMessage === 'success' ? 'green' : 'red'}-500 text-white py-4 px-6 shadow-lg flex items-center justify-between`}>
+        <span className="font-semibold">{errorMessage}</span>
+        <button
+          onClick={() => setShowError(false)}
+          className="text-white hover:text-gray-200 focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+
   if (!isConnected) {
-    return <p>Please connect.</p>;
+    return (
+      <div className="flex justify-center items-center py-20 mt-10">
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => openConnectModal?.()}
+          className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
+        >
+          Connect Wallet
+        </Button>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen py-20 mt-10">
       <div className="container mx-auto px-4">
+        {customAlert}
 
         <Grow in timeout={125}>
           <h2 className="text-3xl font-bold text-center mb-4">My FruitFable Collection</h2>
@@ -187,14 +216,12 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
           <div>{stringify(receipt, null, 2)}</div>
         ): (<></>)}
 
-        {snackAlert}
-
-        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl">
+        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl flex flex-wrap">
           {Object.entries(nftItems).map(([fruitType, nfts]) => (
             <Grow in={activeAnimation}>
               <div key={fruitType} className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold">{fruitType}</h3>
+                <div className="flex items-center mb-4">
+                  <h3 className="text-2xl font-bold mr-2">{fruitType}</h3>
                   <Button 
                     onClick={() => fusionNfts(fruitType)} 
                     variant="contained"
@@ -203,32 +230,29 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
                     Fusion
                   </Button>
                 </div>
-
-                <ReactLiteCarousel autoPlay displayButtons={nfts.length > 1} btnRounded btnBackgroundColor={'#e53935'} containerWidth={'40'}>
-                  {nfts.map((nftItem, index) => (
-                    <Card key={index} className="bg-white rounded-lg shadow-lg p-4">
-                      <CardMedia
-                        className="h-64 rounded-lg"
-                        image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
-                        title={nftItem.metadata.name}
-                      />
-                      <CardContent>
-                        <h4 className="text-xl font-semibold mb-2">{nftItem.metadata.name}</h4>
-                        <p className="text-gray-600 mb-4">{nftItem.metadata.description}</p>
-                        <span className="text-lg font-bold">Balance: {nftItem.balance}</span>
-                      </CardContent>
-                      <CardActions>
-                        <Button 
-                          size="small" 
-                          variant="outlined"
-                          className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out"
-                        >
-                          Transfer
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  ))}
-                </ReactLiteCarousel>
+                {nfts.map((nftItem, index) => (
+                  <Card key={index} className="bg-white rounded-lg shadow-lg p-4">
+                    <CardMedia
+                      className="h-64 rounded-lg"
+                      image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
+                      title={nftItem.metadata.name}
+                    />
+                    <CardContent>
+                      <h4 className="text-xl font-semibold mb-2">{nftItem.metadata.name}</h4>
+                      <p className="text-gray-600 mb-4">{nftItem.metadata.description}</p>
+                      <span className="text-lg font-bold">Balance: {nftItem.balance}</span>
+                    </CardContent>
+                    <CardActions>
+                      <Button 
+                        size="small" 
+                        variant="outlined"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out"
+                      >
+                        Transfer
+                      </Button>
+                    </CardActions>
+                  </Card>
+                ))}
               </div>
             </Grow>
           ))}
