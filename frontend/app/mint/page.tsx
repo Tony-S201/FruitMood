@@ -98,7 +98,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
   };
 
   // Debug
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
 
   // Call the balanceOf function using useReadContract
   const { data: balance, isFetched } = useReadContract({
@@ -161,10 +161,12 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
                   <Button
                     variant="contained"
                     size="large"
-                    onClick={() => handleMintNft()}
+                    onClick={() => {
+                      isConnected ? handleMintNft() : openConnectModal()
+                    }}
                     className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
                   >
-                    Mint NFT
+                    {isConnected ? 'Mint NFT' : 'Connect Wallet'}
                   </Button>
                 </div>
               </Grow>
