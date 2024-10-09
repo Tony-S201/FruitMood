@@ -10,16 +10,16 @@ const SupportPage: React.FunctionComponent = (): JSX.Element => {
 
   const questions: Faq[] = [
     {
-      question: "What is FruitFable?",
-      answer: "FruitFable is an ERC1155 NFT project on the Arbitrum network where users can collect and combine fruit-themed NFTs with different emotions."
+      question: "What is FruitMood?",
+      answer: "FruitMood is an ERC1155 NFT project on the Arbitrum network where users can collect and combine fruit-themed NFTs with different emotions."
     },
     {
-      question: "How many different NFTs are there in FruitFable collection?",
+      question: "How many different NFTs are there in FruitMood collection?",
       answer: "There are 25 basic NFTs in the collection - 5 fruits (apple, lemon, orange, pineapple and strawberry) each with 5 emotions (happy, sad, angry, scared, shoked)."
     },
     {
-      question: "How do I mint a FruitFable NFT?",
-      answer: "To mint a FruitFable NFT, go to the mint page and you choose one of the five emotions and one of the five fruits. The NFT is then minted based on your selection."
+      question: "How do I mint a FruitMood NFT?",
+      answer: "To mint a FruitMood NFT, go to the mint page and you choose one of the five emotions and one of the five fruits. The NFT is then minted based on your selection."
     },
     {
       question: "What is the 'ultimate' fruit NFT?",
@@ -30,16 +30,16 @@ const SupportPage: React.FunctionComponent = (): JSX.Element => {
       answer: "Once you have collection all five emotions of a single fruit type, you can visite the collection page and use the fusion feature to combine them."
     },
     {
-      question: "Can I trade my FruitFable NFTs?",
-      answer: "Yes, FruitFable NFT are standard ERC1155 tokens, which means they can be traded on compatible NFT marketplaces on the Arbitrum network."
+      question: "Can I trade my FruitMood NFTs?",
+      answer: "Yes, FruitMood NFT are standard ERC1155 tokens, which means they can be traded on compatible NFT marketplaces on the Arbitrum network."
     },
     {
-      question: "What blockchain is FruitFable built on?",
-      answer: "FruitFable is built on the Arbitrum network, which is layer 2 scaling solution for Ethereum."
+      question: "What blockchain is FruitMood built on?",
+      answer: "FruitMood is built on the Arbitrum network, which is layer 2 scaling solution for Ethereum."
     },
     {
-      question: "How can I view my FruitFable NFT collection?",
-      answer: "You can view your FruitFable NFT collection on the dedicated collection page within the website."
+      question: "How can I view my FruitMood NFT collection?",
+      answer: "You can view your FruitMood NFT collection on the dedicated collection page within the website."
     },
     {
       question: "Is there a limit to how many NFTs I can mint?",

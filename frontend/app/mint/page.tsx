@@ -116,7 +116,7 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
     <div className="min-h-screen py-20 mt-10">
       <div className="container mx-auto px-4">
         <Grow in timeout={125}>
-          <h2 className="text-3xl font-bold text-center mb-4">Mint Your FruitFable NFT</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">Mint Your FruitMood NFT</h2>
         </Grow>
         <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl">
           <Grow in timeout={250}>
