@@ -2,17 +2,19 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { type Hash, type TransactionReceipt, stringify } from "viem";
+import { type Hash, type TransactionReceipt } from "viem";
 
 // UI components
-import { Button, Snackbar, Alert, Card, CardActions, CardContent, CardMedia, useTheme, useMediaQuery, Grow } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Grow, CircularProgress } from "@mui/material";
 
 // Constants
 import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft";
 import { fruitIds } from "../constants/tokenIds";
+import CustomAlert from "../components/shared/CustomAlert";
 
 // TypeScript Interfaces
 interface Attribute {
@@ -29,31 +31,23 @@ interface nftItem {
   },
   tokenId: number
 }
+type typeOfAlert = 'error' | 'success';
 
 const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
   /* State */
   const [nftItems, setNftItems] = useState<{[key: string]: nftItem[]}>({});
-  const [hash, setHash] = useState<Hash>();
-  const [showError, setShowError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alertType, setAlertType] = useState<typeOfAlert>("error");
   const [receipt, setReceipt] = useState<TransactionReceipt>();
+  const [hash, setHash] = useState<Hash>();
   const [activeAnimation, setActiveAnimation] = useState<boolean>(false);
-
-  /* Responsive const */
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const [loading, setLoading] = useState<boolean>(true);
 
   /* Another const */
   const { address: userAddress, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-
-  const getSlidesPerView = () => {
-    if (isMobile) return 1;
-    if (isTablet) return 2;
-    return 3;
-  };
 
   // Fetch nft metadata from contract
   const fetchNftMetadata = async (tokenId: number) => {
@@ -78,6 +72,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   // NFTs Fusion
   const fusionNfts = async (fruitType: string) => {
     try {
+      setLoading(true);
       const { request } = await publicClient.simulateContract({
         address: contractAddress,
         abi: contractAbi,
@@ -85,15 +80,33 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         account: userAddress!,
         args: [fruitIds[fruitType.toLowerCase() as keyof typeof fruitIds]]
       })
-      console.log(request)
       const hash = await walletClient.writeContract(request);
-      setHash(hash);
+
+      try {
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+        if (receipt.status === 'success') {
+          setLoading(false);
+          setAlertType('success')
+          setAlertMessage('La fusion des NFTs a été effectuée avec succès !');
+          setShowAlert(true);
+        } else {
+          console.error('Erreur during tx :', receipt);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Erreur during tx receipt :', error);
+        setLoading(false);
+      }
+
     } catch(error) {
+      setLoading(false)
       if (error instanceof Error) {
         const revertReason = "You must collect all 5 emotion traits of the same fruit NFT to perform the merge.";
         if (error.message.includes(revertReason)) {
-          setErrorMessage(revertReason);
-          setShowError(true);
+          setAlertType('error')
+          setAlertMessage(revertReason);
+          setShowAlert(true);
         }
       } else {
         console.error("An unknown error occurred:", error);
@@ -103,23 +116,11 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
   /* useEffect Hook */
 
-  useEffect(() => {
-    (async () => {
-      if (hash) {
-        console.log('-- in use effect hash --')
-        console.log(hash)
-        const receipt = await publicClient.waitForTransactionReceipt({ hash });
-        console.log(receipt)
-        setReceipt(receipt);
-        console.log('-- end use effect hash --')
-      }
-    })
-  }, [hash]);
-
   // Get all nfts balance and infos
   useEffect(() => {
     if (userAddress && contractAddress) {
       const fetchNfts = async() => {
+        setLoading(true);
         const nfts = await Promise.all(
           nftIds.map(async(tokenId) => {
             const balance: any = await publicClient.readContract({
@@ -149,6 +150,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         }, {} as {[key: string]: nftItem[]});
 
         setNftItems(filteredNfts);
+        setLoading(false);
       };
       fetchNfts();
     };
@@ -161,32 +163,6 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   }, [nftItems]);
 
   /* Render */
-
-  const snackAlert: JSX.Element = (
-    <React.Fragment>
-      <Snackbar open={showError} autoHideDuration={6000} onClose={() => setShowError(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <Alert severity="error">
-          {errorMessage}
-        </Alert>
-      </Snackbar>
-    </React.Fragment>
-  );
-
-  const customAlert: JSX.Element = (
-    <div className={`fixed top-0 left-0 right-0 z-50 ${showError ? 'block' : 'hidden'}`}>
-      <div className={`bg-${errorMessage === 'success' ? 'green' : 'red'}-500 text-white py-4 px-6 shadow-lg flex items-center justify-between`}>
-        <span className="font-semibold">{errorMessage}</span>
-        <button
-          onClick={() => setShowError(false)}
-          className="text-white hover:text-gray-200 focus:outline-none"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
 
   if (!isConnected) {
     return (
@@ -203,60 +179,85 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="py-20 mt-10 w-full">
+        <div className="text-center">
+          <CircularProgress/>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen py-20 mt-10">
       <div className="container mx-auto px-4">
-        {customAlert}
+        <CustomAlert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert} />
 
-        <Grow in timeout={125}>
-          <h2 className="text-3xl font-bold text-center mb-4">My FruitFable Collection</h2>
-        </Grow>
-
-        {receipt ? (
-          <div>{stringify(receipt, null, 2)}</div>
-        ): (<></>)}
-
-        <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl flex flex-wrap">
-          {Object.entries(nftItems).map(([fruitType, nfts]) => (
-            <Grow in={activeAnimation}>
-              <div key={fruitType} className="mb-8">
-                <div className="flex items-center mb-4">
-                  <h3 className="text-2xl font-bold mr-2">{fruitType}</h3>
-                  <Button 
-                    onClick={() => fusionNfts(fruitType)} 
-                    variant="contained"
-                    className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
-                  >
-                    Fusion
-                  </Button>
-                </div>
-                {nfts.map((nftItem, index) => (
-                  <Card key={index} className="bg-white rounded-lg shadow-lg p-4">
-                    <CardMedia
-                      className="h-64 rounded-lg"
-                      image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
-                      title={nftItem.metadata.name}
-                    />
-                    <CardContent>
-                      <h4 className="text-xl font-semibold mb-2">{nftItem.metadata.name}</h4>
-                      <p className="text-gray-600 mb-4">{nftItem.metadata.description}</p>
-                      <span className="text-lg font-bold">Balance: {nftItem.balance}</span>
-                    </CardContent>
-                    <CardActions>
-                      <Button 
-                        size="small" 
-                        variant="outlined"
-                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out"
-                      >
-                        Transfer
-                      </Button>
-                    </CardActions>
-                  </Card>
-                ))}
-              </div>
+        {Object.keys(nftItems).length === 0 ? (
+          <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl flex flex-wrap mt-16">
+            <p className="text-lg mb-2 w-full">You don't have any FruitMood NFTs yet.</p>
+            <p className="text-lg mb-4 w-full">Start your collection now by minting your first fruit!</p>
+            <Link href="/mint">
+              <Button 
+                variant="contained"
+                className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
+              >
+                Mint My First Fruit
+              </Button>
+            </Link>
+          </div>
+        ):(
+          <div>
+            <Grow in timeout={125}>
+              <h2 className="text-3xl font-bold text-center mb-4">My FruitFable Collection</h2>
             </Grow>
-          ))}
-        </div>
+            <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl">
+              {Object.entries(nftItems).map(([fruitType, nfts]) => (
+                <Grow in={activeAnimation} key={fruitType}>
+                  <div className="mb-8">
+                    <div className="flex items-center mb-4">
+                      <h3 className="text-2xl font-bold mr-2">{fruitType}</h3>
+                      <Button 
+                        onClick={() => fusionNfts(fruitType)} 
+                        variant="contained"
+                        className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
+                      >
+                        Fusion
+                      </Button>
+                    </div>
+                    <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+                      {nfts.map((nftItem, index) => (
+                        <Card key={index} className="bg-white rounded-lg shadow-lg w-64">
+                          <CardMedia
+                            className="h-64 w-64 rounded-lg"
+                            image={nftItem.metadata.image.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/')}
+                            title={nftItem.metadata.name}
+                          />
+                          <CardContent>
+                            <h4 className="text-xl font-semibold mb-2">{nftItem.metadata.name}</h4>
+                            <p className="text-gray-600 mb-4">{nftItem.metadata.description}</p>
+                            <span className="text-lg font-bold">Balance: {nftItem.balance}</span>
+                          </CardContent>
+                          <CardActions>
+                            <Button 
+                              size="small" 
+                              variant="outlined"
+                              className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out m-2"
+                            >
+                              Transfer
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </Grow>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   )
