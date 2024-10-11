@@ -1,1 +1,1 @@
-# NFT-Fortune-Cookies
+# FruitMood
