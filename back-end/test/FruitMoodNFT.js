@@ -1,5 +1,4 @@
 const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
 const Fruit = {
@@ -30,8 +29,8 @@ describe("Lock", function () {
     // Contracts are deployed using the first signer/account by default
     const [owner, otherAccount] = await ethers.getSigners();
 
-    const FruitFableNFTContract = await ethers.getContractFactory("FruitFableNFT");
-    const nftcontract = await FruitFableNFTContract.deploy(owner.address);
+    const FruitMoodNFTContract = await ethers.getContractFactory("FruitMoodNFT");
+    const nftcontract = await FruitMoodNFTContract.deploy(owner.address);
 
     return { nftcontract, owner, otherAccount };
   }
@@ -172,7 +171,7 @@ describe("Lock", function () {
 
       // Merge fruits.
       await expect(nftcontract.connect(otherAccount).mergeFruits(0))
-        .to.be.revertedWith("You must own a fruit with this emotion");
+        .to.be.revertedWith("You must collect all 5 emotion traits of the same fruit NFT to perform the merge.");
     });
 
     it("Should burn the tokens after merging", async function () {
