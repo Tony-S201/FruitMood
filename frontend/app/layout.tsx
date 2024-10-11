@@ -8,7 +8,7 @@ import Navigation from "./components/shared/navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FruitFable",
+  title: "FruitMood",
   description: "Generate your fruit!",
 };
 
