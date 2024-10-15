@@ -6,10 +6,10 @@ import Link from "next/link";
 import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { type Hash, type TransactionReceipt } from "viem";
+import { type Hash, type TransactionReceipt, type Address, isAddress } from "viem";
 
 // UI components
-import { Button, Card, CardActions, CardContent, CardMedia, Grow, CircularProgress } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Grow, CircularProgress, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@mui/material";
 
 // Constants
 import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft";
@@ -44,6 +44,8 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   const [hash, setHash] = useState<Hash>();
   const [activeAnimation, setActiveAnimation] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [openTransfer, setOpenTransfer] = useState<boolean>(false);
+  const [currentTokenId, setCurrentTokenId] = useState<number | null>(null);
 
   /* Another const */
   const { address: userAddress, isConnected } = useAccount();
@@ -83,7 +85,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
       const hash = await walletClient.writeContract(request);
 
       try {
-      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
         if (receipt.status === 'success') {
           setLoading(false);
@@ -112,6 +114,58 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknown error occurred:", error);
       }
     }
+  }
+
+  const transferNft = async(tokenId: number, targetAddress: Address) => {
+    try {
+      setLoading(true);
+
+      const { request } = await publicClient.simulateContract({
+        address: contractAddress,
+        abi: contractAbi,
+        functionName: 'safeTransferFrom',
+        account: userAddress!,
+        args: [userAddress, targetAddress, tokenId, 1, "0x"]
+      })
+      const hash = await walletClient.writeContract(request);
+
+      try {
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+        if (receipt.status === 'success') {
+          setLoading(false);
+          setAlertType('success')
+          setAlertMessage(`Transfer to ${targetAddress} successfully executed.`);
+          setShowAlert(true);
+        } else {
+          console.error('Erreur during tx :', receipt);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Erreur during tx receipt :', error);
+        setLoading(false);
+      }
+
+    } catch(error) {
+      setLoading(false);
+      if (error instanceof Error) {
+        setAlertType('error')
+        setAlertMessage("Failed to execute transfer, please retry.")
+        setShowAlert(true);
+      } else {
+        console.error("An unknow error occured")
+      }
+    }
+  }
+
+  const openTransferModal = (tokenId: number) => {
+    setCurrentTokenId(tokenId);
+    setOpenTransfer(true);
+  }
+
+  const closeTransferModal = () => {
+    setCurrentTokenId(null);
+    setOpenTransfer(false);
   }
 
   /* useEffect Hook */
@@ -192,7 +246,58 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   return (
     <div className="min-h-screen py-20 mt-10">
       <div className="container mx-auto px-4">
+
         <CustomAlert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert} />
+
+        <Dialog
+          open={openTransfer}
+          onClose={() => closeTransferModal}
+          PaperProps={{
+            component: 'form',
+            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget); // Create form object from current form.
+              const formJson = Object.fromEntries((formData as any).entries()); // Convert form data to object.
+              const targetAddress = formJson.targetAddress; // Extract data.
+
+              if (currentTokenId === null) {
+                setAlertType("error");
+                setAlertMessage("No token selected for transfer.")
+                setShowAlert(true);
+                return;
+              }
+
+              if (!isAddress(targetAddress)) {
+                setAlertType("error");
+                setAlertMessage("Invalid Ethereum address.")
+                setShowAlert(true);
+                return;
+              }
+
+              transferNft(currentTokenId, targetAddress);
+              closeTransferModal();
+            },
+          }}
+        >
+          <DialogTitle>Transfer</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Transfer your FruitMood NFT to another address
+            </DialogContentText>
+            <TextField 
+              required
+              type="text"
+              name="targetAddress"
+              fullWidth
+              variant="standard"
+            >
+            </TextField>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeTransferModal}>Cancel</Button>
+            <Button type="submit">Confirm</Button>
+          </DialogActions>
+        </Dialog>
 
         {Object.keys(nftItems).length === 0 ? (
           <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl flex flex-wrap mt-16">
@@ -241,6 +346,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
                           </CardContent>
                           <CardActions>
                             <Button 
+                              onClick={() => openTransferModal(nftItem.tokenId)}
                               size="small" 
                               variant="outlined"
                               className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out m-2"
