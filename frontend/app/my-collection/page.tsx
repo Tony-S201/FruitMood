@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
@@ -52,7 +52,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
 
   // Fetch nft metadata from contract
-  const fetchNftMetadata = async (tokenId: number) => {
+  const fetchNftMetadata = useMemo(() => async (tokenId: number) => {
     const uri = await publicClient.readContract({
       address: contractAddress,
       abi: contractAbi,
@@ -69,10 +69,10 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
       return metadata;
     }
     return null;
-  };
+  }, [publicClient, contractAddress, contractAbi]);
 
   // NFTs Fusion
-  const fusionNfts = async (fruitType: string) => {
+  const fusionNfts = useCallback(async(fruitType: string) => {
     try {
       setLoading(true);
       const { request } = await publicClient.simulateContract({
@@ -114,9 +114,9 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknown error occurred:", error);
       }
     }
-  }
+  }, [publicClient, walletClient, userAddress, contractAddress, contractAbi]);
 
-  const transferNft = async(tokenId: number, targetAddress: Address) => {
+  const transferNft = useCallback(async(tokenId: number, targetAddress: Address) => {
     try {
       setLoading(true);
 
@@ -156,17 +156,22 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknow error occured")
       }
     }
-  }
+  }, [publicClient, walletClient, userAddress, contractAddress, contractAbi]);
 
-  const openTransferModal = (tokenId: number) => {
+  const openTransferModal = useCallback((tokenId: number) => {
     setCurrentTokenId(tokenId);
     setOpenTransfer(true);
-  }
+  }, []);
 
-  const closeTransferModal = () => {
+  const closeTransferModal = useCallback(() => {
     setCurrentTokenId(null);
     setOpenTransfer(false);
-  }
+  }, []);
+
+  const toggleTransferModal = useCallback((tokenId: number | null = null) => {
+    setCurrentTokenId(tokenId);
+    setOpenTransfer(prev => !prev);
+  }, []);
 
   /* useEffect Hook */
 
@@ -251,7 +256,6 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
         <Dialog
           open={openTransfer}
-          onClose={() => closeTransferModal}
           PaperProps={{
             component: 'form',
             onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
@@ -275,7 +279,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
               }
 
               transferNft(currentTokenId, targetAddress);
-              closeTransferModal();
+              toggleTransferModal();
             },
           }}
         >
@@ -294,7 +298,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
             </TextField>
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeTransferModal}>Cancel</Button>
+            <Button onClick={() => toggleTransferModal?.()}>Cancel</Button>
             <Button type="submit">Confirm</Button>
           </DialogActions>
         </Dialog>
@@ -346,7 +350,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
                           </CardContent>
                           <CardActions>
                             <Button 
-                              onClick={() => openTransferModal(nftItem.tokenId)}
+                              onClick={() => toggleTransferModal(nftItem.tokenId)}
                               size="small" 
                               variant="outlined"
                               className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition duration-200 ease-in-out m-2"
