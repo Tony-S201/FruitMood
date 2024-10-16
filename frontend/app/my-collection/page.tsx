@@ -6,15 +6,15 @@ import Link from "next/link";
 import { publicClient, walletClient } from "../constants/client";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { type Hash, type TransactionReceipt, type Address, isAddress } from "viem";
+import { isAddress, type Hash, type TransactionReceipt, type Address, type ReadContractParameters } from "viem";
 
 // UI components
 import { Button, Card, CardActions, CardContent, CardMedia, Grow, CircularProgress, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@mui/material";
+import CustomAlert from "../components/shared/CustomAlert";
 
 // Constants
-import { contractAddress, contractAbi, nftIds } from "../constants/fruitfablenft";
+import { contractData, nftIds, metadataUrl as ipfsUrl } from "../constants/fruitfMoodNft";
 import { fruitIds } from "../constants/tokenIds";
-import CustomAlert from "../components/shared/CustomAlert";
 
 // TypeScript Interfaces
 interface Attribute {
@@ -40,8 +40,6 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [alertType, setAlertType] = useState<typeOfAlert>("error");
-  const [receipt, setReceipt] = useState<TransactionReceipt>();
-  const [hash, setHash] = useState<Hash>();
   const [activeAnimation, setActiveAnimation] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [openTransfer, setOpenTransfer] = useState<boolean>(false);
@@ -54,14 +52,13 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
   // Fetch nft metadata from contract
   const fetchNftMetadata = useMemo(() => async (tokenId: number) => {
     const uri = await publicClient.readContract({
-      address: contractAddress,
-      abi: contractAbi,
+      ...contractData,
       functionName: 'uri',
       args: [tokenId]
-    });
+    } as ReadContractParameters);
   
     if (uri && typeof uri === 'string') {
-      const metadataUrl = uri.replace('ipfs://', 'https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/');
+      const metadataUrl = uri.replace('ipfs://', ipfsUrl);
       const fullMetadataUrl = metadataUrl.replace('{id}', tokenId.toString());
       const response = await fetch(fullMetadataUrl);
       const metadata = await response.json();
@@ -69,28 +66,28 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
       return metadata;
     }
     return null;
-  }, [publicClient, contractAddress, contractAbi]);
+  }, [publicClient, contractData]);
 
   // NFTs Fusion
   const fusionNfts = useCallback(async(fruitType: string) => {
     try {
       setLoading(true);
+
       const { request } = await publicClient.simulateContract({
-        address: contractAddress,
-        abi: contractAbi,
+        ...contractData,
         functionName: 'mergeFruits',
         account: userAddress!,
         args: [fruitIds[fruitType.toLowerCase() as keyof typeof fruitIds]]
-      })
-      const hash = await walletClient.writeContract(request);
+      });
+      const hash: Hash = await walletClient.writeContract(request);
 
       try {
-        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt({ hash });
 
         if (receipt.status === 'success') {
           setLoading(false);
           setAlertType('success')
-          setAlertMessage('La fusion des NFTs a été effectuée avec succès !');
+          setAlertMessage('Merge successfully executed, enjoy your new ULTIMATE FRUIT NFT!');
           setShowAlert(true);
         } else {
           console.error('Erreur during tx :', receipt);
@@ -114,23 +111,22 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknown error occurred:", error);
       }
     }
-  }, [publicClient, walletClient, userAddress, contractAddress, contractAbi]);
+  }, [publicClient, walletClient, userAddress, contractData]);
 
   const transferNft = useCallback(async(tokenId: number, targetAddress: Address) => {
     try {
       setLoading(true);
 
       const { request } = await publicClient.simulateContract({
-        address: contractAddress,
-        abi: contractAbi,
+        ...contractData,
         functionName: 'safeTransferFrom',
         account: userAddress!,
         args: [userAddress, targetAddress, tokenId, 1, "0x"]
       })
-      const hash = await walletClient.writeContract(request);
+      const hash: Hash = await walletClient.writeContract(request);
 
       try {
-        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt({ hash });
 
         if (receipt.status === 'success') {
           setLoading(false);
@@ -156,17 +152,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknow error occured")
       }
     }
-  }, [publicClient, walletClient, userAddress, contractAddress, contractAbi]);
-
-  const openTransferModal = useCallback((tokenId: number) => {
-    setCurrentTokenId(tokenId);
-    setOpenTransfer(true);
-  }, []);
-
-  const closeTransferModal = useCallback(() => {
-    setCurrentTokenId(null);
-    setOpenTransfer(false);
-  }, []);
+  }, [publicClient, walletClient, userAddress, contractData]);
 
   const toggleTransferModal = useCallback((tokenId: number | null = null) => {
     setCurrentTokenId(tokenId);
@@ -177,14 +163,13 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
   // Get all nfts balance and infos
   useEffect(() => {
-    if (userAddress && contractAddress) {
+    if (userAddress && contractData) {
       const fetchNfts = async() => {
         setLoading(true);
         const nfts = await Promise.all(
           nftIds.map(async(tokenId) => {
             const balance: any = await publicClient.readContract({
-              address: contractAddress,
-              abi: contractAbi,
+              ...contractData,
               functionName: 'balanceOf',
               args: [userAddress, tokenId]
             })

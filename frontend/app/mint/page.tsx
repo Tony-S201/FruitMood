@@ -1,119 +1,55 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 // UI components
 import { Button, Grow } from "@mui/material";
 
-// Wagmi
-import { useWriteContract, useWaitForTransactionReceipt, useReadContract, useAccount } from 'wagmi';
+// Wagmi & Viem
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
+import { type Hash } from "viem";
 
 // Constants
-import { contractAddress, contractAbi } from "../constants/fruitfablenft";
+import { contractData, explorerUrl } from "../constants/fruitfMoodNft";
 import { fruitIds, emotionIds } from "../constants/tokenIds";
+import { fruits, emotions } from "../constants/emojis";
 
 const MintPage: React.FunctionComponent = (): JSX.Element => {
 
-  interface Emoji {
-    emoji: string,
-    value: string
-  };
-
-  const emotions: Emoji[] = [
-    {
-      emoji: "😀",
-      value: "happy"
-    },
-    {
-      emoji: "😭",
-      value: "sad"
-    },
-    {
-      emoji: "😠",
-      value: "angry"
-    },
-    {
-      emoji: "😯",
-      value: "scared"
-    },
-    {
-      emoji: "😱",
-      value: "shoked"
-    }
-  ];
-
-  const fruits: Emoji[] = [
-    {
-      emoji: "🍎",
-      value: "apple"
-    },
-    {
-      emoji: "🍋",
-      value: "lemon"
-    },
-    {
-      emoji: "🍊",
-      value: "orange"
-    },
-    {
-      emoji: "🍍",
-      value: "pineapple"
-    },
-    {
-      emoji: "🍓",
-      value: "strawberry"
-    }
-  ]
-
   const [selectedEmotion, setEmotion] = useState<string>("");
   const [selectedFruit, setFruit] = useState<string>("");
+  const [tx, setTx] = useState<Hash | null>(null);
 
   const { openConnectModal } = useConnectModal();
+  const { isConnected } = useAccount();
 
-  const handleSelectEmotion = (value: string): void => {
+  const handleSelectEmotion = useCallback((value: string): void => {
     setEmotion(value);
-  };
-  const handleSelectFruit = (value: string): void => {
+  }, []);
+  const handleSelectFruit = useCallback((value: string): void => {
     setFruit(value);
-  };
+  }, []);
 
   // Mint part
   const { writeContractAsync, data: hash, isPending } = useWriteContract();
-
   const { isSuccess, isError } = useWaitForTransactionReceipt({
     hash,
   });
 
   const handleMintNft = async() => {
-    
     try {
+      setTx(null);
       const result = await writeContractAsync({
-        abi: contractAbi,
-        address: contractAddress,
+        ...contractData,
         functionName: 'mint',
         args: [fruitIds[selectedFruit as keyof typeof fruitIds], emotionIds[selectedEmotion as keyof typeof emotionIds], 1, "0x"]
       });
-      console.log('Transaction hash:', result);
+      setTx(result);
     } catch (err) {
       console.error('Error minting NFT:', err);
     }
   };
-
-  // Debug
-  const { address, isConnected } = useAccount();
-
-  // Call the balanceOf function using useReadContract
-  const { data: balance, isFetched } = useReadContract({
-    abi: contractAbi,
-    address: contractAddress,
-    functionName: "balanceOf",
-    args: [address, 0]
-  });
-
-  useEffect(() => {
-    console.log(balance)
-  }, [isFetched])
 
   return (
     <div className="min-h-screen py-20 mt-10">
@@ -174,10 +110,11 @@ const MintPage: React.FunctionComponent = (): JSX.Element => {
                 </div>
               </Grow>
             ) : (<></>)}
-            <div className="mt-6">
+            <div className="mt-3">
               {isPending && <Grow in timeout={625}><p className="text-lg">Loading...</p></Grow>}
               {isError && <p className="text-lg text-red-500">Error during the transaction</p>}
               {isSuccess && <p className="text-lg text-green-500">Success: Transaction confirmed</p>}
+              {(!isPending && isSuccess && tx) && <a href={`${explorerUrl}${tx}`} target="_blank" className="underline text-orange-500 hover:text-red-500">Transaction Hash</a>}
             </div>
           </div>
         </div>
