@@ -5,7 +5,7 @@ export const metadataUrl = "https://violet-impossible-earthworm-31.mypinata.clou
 export const explorerUrl = "https://sepolia.arbiscan.io/tx/";
 
 /* Only edit the following part */
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3" as const;
+const contractAddress = "0x321B8eD235D79571C2eE49c52c216a96496111E9" as const;
 const contractAbi = [
   {
     "inputs": [
