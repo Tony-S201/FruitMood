@@ -2,7 +2,7 @@ import { Address, Abi } from "viem";
 
 export const nftIds = [0,1,2,3,4,10,11,12,13,14,20,21,22,23,24,30,31,32,33,34,40,41,42,43,44,100,200,300,400,500];
 export const metadataUrl = "https://violet-impossible-earthworm-31.mypinata.cloud/ipfs/";
-export const explorerUrl = "https://arbiscan.io/tx/";
+export const explorerUrl = "https://sepolia.arbiscan.io/tx/";
 
 /* Only edit the following part */
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3" as const;

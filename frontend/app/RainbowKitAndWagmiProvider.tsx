@@ -13,7 +13,8 @@ import {
 
 // Chains from wagmi
 import {
-    hardhat
+    hardhat,
+    arbitrumSepolia
   } from 'wagmi/chains';
 
 // TypeScript interface
@@ -21,12 +22,14 @@ interface RainbowKitProviderProps {
     children: React.ReactNode;
 }
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const config = getDefaultConfig({
   appName: 'My RainbowKit App',
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID as string,
-  chains: [hardhat],
+  chains: [isProduction ? arbitrumSepolia : hardhat],
   transports: {
-    [hardhat.id]: http(),
+    [isProduction ? arbitrumSepolia.id : hardhat.id]: http(),
   },
   ssr: true, // If your dApp uses server side rendering (SSR)
 });

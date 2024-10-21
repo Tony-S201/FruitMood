@@ -1,12 +1,14 @@
 import { createPublicClient, createWalletClient, custom, http } from "viem";
-import { hardhat } from "viem/chains";
+import { arbitrumSepolia, hardhat } from "viem/chains";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 export const publicClient = createPublicClient({
-    chain: hardhat,
+    chain: isProduction ? arbitrumSepolia : hardhat,
     transport: http()
 });
 
 export const walletClient = createWalletClient({
-    chain: hardhat,
+    chain: isProduction ? arbitrumSepolia : hardhat,
     transport: custom(window.ethereum!)
 });
