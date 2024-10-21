@@ -1,3 +1,5 @@
+'use client';
+
 import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { arbitrumSepolia, hardhat } from "viem/chains";
 
