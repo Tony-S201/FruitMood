@@ -330,12 +330,12 @@ const contractAbi = [
   {
     "inputs": [
       {
-        "internalType": "enum FruitFableNFT.Fruit",
+        "internalType": "enum FruitMoodNFT.Fruit",
         "name": "fruit",
         "type": "uint8"
       },
       {
-        "internalType": "enum FruitFableNFT.Emotion",
+        "internalType": "enum FruitMoodNFT.Emotion",
         "name": "emotion",
         "type": "uint8"
       }
@@ -378,7 +378,7 @@ const contractAbi = [
   {
     "inputs": [
       {
-        "internalType": "enum FruitFableNFT.Fruit",
+        "internalType": "enum FruitMoodNFT.Fruit",
         "name": "fruit",
         "type": "uint8"
       }
@@ -391,12 +391,12 @@ const contractAbi = [
   {
     "inputs": [
       {
-        "internalType": "enum FruitFableNFT.Fruit",
+        "internalType": "enum FruitMoodNFT.Fruit",
         "name": "fruit",
         "type": "uint8"
       },
       {
-        "internalType": "enum FruitFableNFT.Emotion",
+        "internalType": "enum FruitMoodNFT.Emotion",
         "name": "emotion",
         "type": "uint8"
       },
@@ -613,7 +613,7 @@ const contractAbi = [
   {
     "inputs": [
       {
-        "internalType": "enum FruitFableNFT.Fruit",
+        "internalType": "enum FruitMoodNFT.Fruit",
         "name": "",
         "type": "uint8"
       }

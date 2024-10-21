@@ -290,7 +290,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
 
         {Object.keys(nftItems).length === 0 ? (
           <div className="bg-white bg-opacity-80 shadow-lg rounded-lg p-6 mx-auto max-w-3xl flex flex-wrap mt-16">
-            <p className="text-lg mb-2 w-full">You don't have any FruitMood NFTs yet.</p>
+            <p className="text-lg mb-2 w-full">You don&apos;t have any FruitMood NFTs yet.</p>
             <p className="text-lg mb-4 w-full">Start your collection now by minting your first fruit!</p>
             <Link href="/mint">
               <Button 
