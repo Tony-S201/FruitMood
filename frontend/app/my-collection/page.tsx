@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { publicClient, walletClient } from "../constants/client";
+import { publicClient, createWalletClientInstance } from "../constants/client";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { isAddress, type Hash, type TransactionReceipt, type Address, type ReadContractParameters } from "viem";
@@ -73,6 +73,8 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
     try {
       setLoading(true);
 
+      const walletClient = createWalletClientInstance();
+
       const { request } = await publicClient.simulateContract({
         ...contractData,
         functionName: 'mergeFruits',
@@ -111,11 +113,13 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknown error occurred:", error);
       }
     }
-  }, [publicClient, walletClient, userAddress, contractData]);
+  }, [publicClient, userAddress, contractData]);
 
   const transferNft = useCallback(async(tokenId: number, targetAddress: Address) => {
     try {
       setLoading(true);
+
+      const walletClient = createWalletClientInstance();
 
       const { request } = await publicClient.simulateContract({
         ...contractData,
@@ -152,7 +156,7 @@ const MyCollectionPage: React.FunctionComponent = (): JSX.Element => {
         console.error("An unknow error occured")
       }
     }
-  }, [publicClient, walletClient, userAddress, contractData]);
+  }, [publicClient, userAddress, contractData]);
 
   const toggleTransferModal = useCallback((tokenId: number | null = null) => {
     setCurrentTokenId(tokenId);
